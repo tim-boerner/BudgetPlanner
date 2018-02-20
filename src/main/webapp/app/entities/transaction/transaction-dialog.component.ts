@@ -9,8 +9,8 @@ import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 import { Transaction } from './transaction.model';
 import { TransactionPopupService } from './transaction-popup.service';
 import { TransactionService } from './transaction.service';
-import { User, UserService } from '../../shared';
 import { Category, CategoryService } from '../category';
+import { TransAccount, TransAccountService } from '../trans-account';
 
 @Component({
     selector: 'jhi-transaction-dialog',
@@ -21,27 +21,27 @@ export class TransactionDialogComponent implements OnInit {
     transaction: Transaction;
     isSaving: boolean;
 
-    users: User[];
-
     categories: Category[];
+
+    transaccounts: TransAccount[];
     dateDp: any;
 
     constructor(
         public activeModal: NgbActiveModal,
         private jhiAlertService: JhiAlertService,
         private transactionService: TransactionService,
-        private userService: UserService,
         private categoryService: CategoryService,
+        private transAccountService: TransAccountService,
         private eventManager: JhiEventManager
     ) {
     }
 
     ngOnInit() {
         this.isSaving = false;
-        this.userService.query()
-            .subscribe((res: HttpResponse<User[]>) => { this.users = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
         this.categoryService.query()
             .subscribe((res: HttpResponse<Category[]>) => { this.categories = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
+        this.transAccountService.query()
+            .subscribe((res: HttpResponse<TransAccount[]>) => { this.transaccounts = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
     }
 
     clear() {
@@ -78,11 +78,11 @@ export class TransactionDialogComponent implements OnInit {
         this.jhiAlertService.error(error.message, null, null);
     }
 
-    trackUserById(index: number, item: User) {
+    trackCategoryById(index: number, item: Category) {
         return item.id;
     }
 
-    trackCategoryById(index: number, item: Category) {
+    trackTransAccountById(index: number, item: TransAccount) {
         return item.id;
     }
 }

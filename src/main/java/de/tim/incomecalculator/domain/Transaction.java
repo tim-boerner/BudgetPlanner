@@ -42,12 +42,12 @@ public class Transaction implements Serializable {
     @Column(name = "jhi_type", nullable = false)
     private TransactionType type;
 
-    @ManyToOne(optional = false)
-    @NotNull
-    private User user;
-
     @ManyToOne
     private Category category;
+
+    @ManyToOne(optional = false)
+    @NotNull
+    private TransAccount transAccount;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -110,19 +110,6 @@ public class Transaction implements Serializable {
         this.type = type;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public Transaction user(User user) {
-        this.user = user;
-        return this;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public Category getCategory() {
         return category;
     }
@@ -134,6 +121,19 @@ public class Transaction implements Serializable {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public TransAccount getTransAccount() {
+        return transAccount;
+    }
+
+    public Transaction transAccount(TransAccount transAccount) {
+        this.transAccount = transAccount;
+        return this;
+    }
+
+    public void setTransAccount(TransAccount transAccount) {
+        this.transAccount = transAccount;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

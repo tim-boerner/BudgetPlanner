@@ -9,8 +9,8 @@ import { IncomeCalculatorTestModule } from '../../../test.module';
 import { TransactionDialogComponent } from '../../../../../../main/webapp/app/entities/transaction/transaction-dialog.component';
 import { TransactionService } from '../../../../../../main/webapp/app/entities/transaction/transaction.service';
 import { Transaction } from '../../../../../../main/webapp/app/entities/transaction/transaction.model';
-import { UserService } from '../../../../../../main/webapp/app/shared';
 import { CategoryService } from '../../../../../../main/webapp/app/entities/category';
+import { TransAccountService } from '../../../../../../main/webapp/app/entities/trans-account';
 
 describe('Component Tests', () => {
 
@@ -26,8 +26,8 @@ describe('Component Tests', () => {
                 imports: [IncomeCalculatorTestModule],
                 declarations: [TransactionDialogComponent],
                 providers: [
-                    UserService,
                     CategoryService,
+                    TransAccountService,
                     TransactionService
                 ]
             })

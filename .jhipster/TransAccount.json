@@ -1,0 +1,40 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "relationshipType": "one-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "login",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "transAccount"
+        },
+        {
+            "relationshipName": "transaction",
+            "otherEntityName": "transaction",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "transAccount"
+        },
+        {
+            "relationshipName": "accountCollection",
+            "otherEntityName": "accountCollection",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "title"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "title",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20180220204550",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "trans_account",
+    "jpaMetamodelFiltering": false,
+    "pagination": "pagination"
+}

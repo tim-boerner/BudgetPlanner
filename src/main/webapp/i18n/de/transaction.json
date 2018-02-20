@@ -20,8 +20,8 @@
             "description": "Description",
             "date": "Date",
             "type": "Type",
-            "user": "User",
-            "category": "Category"
+            "category": "Category",
+            "transAccount": "Trans Account"
         }
     }
 }
