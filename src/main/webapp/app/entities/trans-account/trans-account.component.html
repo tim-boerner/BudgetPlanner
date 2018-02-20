@@ -1,0 +1,76 @@
+<div>
+    <h2>
+        <span jhiTranslate="incomeCalculatorApp.transAccount.home.title">Trans Accounts</span>
+        <button class="btn btn-primary float-right jh-create-entity create-trans-account" [routerLink]="['/', { outlets: { popup: ['trans-account-new'] } }]">
+            <span class="fa fa-plus"></span>
+            <span  jhiTranslate="incomeCalculatorApp.transAccount.home.createLabel">
+            Create new Trans Account
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="transAccounts">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="title"><span jhiTranslate="incomeCalculatorApp.transAccount.title">Title</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="user.login"><span jhiTranslate="incomeCalculatorApp.transAccount.user">User</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="accountCollection.title"><span jhiTranslate="incomeCalculatorApp.transAccount.accountCollection">Account Collection</span> <span class="fa fa-sort"></span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let transAccount of transAccounts ;trackBy: trackId">
+                <td><a [routerLink]="['../trans-account', transAccount.id ]">{{transAccount.id}}</a></td>
+                <td>{{transAccount.title}}</td>
+                <td>
+                    {{transAccount.user?.login}}
+                </td>
+                <td>
+                    <div *ngIf="transAccount.accountCollection">
+                        <a [routerLink]="['../account-collection', transAccount.accountCollection?.id ]" >{{transAccount.accountCollection?.title}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../trans-account', transAccount.id ]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'trans-account/'+ transAccount.id + '/edit'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'trans-account/'+ transAccount.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div *ngIf="transAccounts && transAccounts.length">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="queryCount" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
+</div>

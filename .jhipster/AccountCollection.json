@@ -1,0 +1,23 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "transAccount",
+            "otherEntityName": "transAccount",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "accountCollection"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "title",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20180220205640",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "account_collection",
+    "jpaMetamodelFiltering": false,
+    "pagination": "pagination"
+}

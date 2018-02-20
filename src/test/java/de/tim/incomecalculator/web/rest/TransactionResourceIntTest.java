@@ -3,7 +3,7 @@ package de.tim.incomecalculator.web.rest;
 import de.tim.incomecalculator.IncomeCalculatorApp;
 
 import de.tim.incomecalculator.domain.Transaction;
-import de.tim.incomecalculator.domain.User;
+import de.tim.incomecalculator.domain.TransAccount;
 import de.tim.incomecalculator.repository.TransactionRepository;
 import de.tim.incomecalculator.service.TransactionService;
 import de.tim.incomecalculator.web.rest.errors.ExceptionTranslator;
@@ -101,10 +101,10 @@ public class TransactionResourceIntTest {
             .date(DEFAULT_DATE)
             .type(DEFAULT_TYPE);
         // Add required entity
-        User user = UserResourceIntTest.createEntity(em);
-        em.persist(user);
+        TransAccount transAccount = TransAccountResourceIntTest.createEntity(em);
+        em.persist(transAccount);
         em.flush();
-        transaction.setUser(user);
+        transaction.setTransAccount(transAccount);
         return transaction;
     }
 

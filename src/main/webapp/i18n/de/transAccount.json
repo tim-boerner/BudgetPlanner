@@ -1,0 +1,25 @@
+
+{
+    "incomeCalculatorApp": {
+        "transAccount" : {
+            "home": {
+                "title": "Trans Accounts",
+                "createLabel": "Trans Account erstellen",
+                "createOrEditLabel": "Trans Account erstellen oder bearbeiten"
+            },
+            "created": "Trans Account erstellt mit ID {{ param }}",
+            "updated": "Trans Account aktualisiert mit ID {{ param }}",
+            "deleted": "Trans Account gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Trans Account {{ id }} wirklich dauerhaft gelöscht werden?"
+            },
+            "detail": {
+                "title": "Trans Account"
+            },
+            "title": "Title",
+            "user": "User",
+            "transaction": "Transaction",
+            "accountCollection": "Account Collection"
+        }
+    }
+}

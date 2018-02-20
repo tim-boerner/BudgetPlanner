@@ -21,8 +21,8 @@
             <th jhiSortBy="description"><span jhiTranslate="incomeCalculatorApp.transaction.description">Description</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="date"><span jhiTranslate="incomeCalculatorApp.transaction.date">Date</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="type"><span jhiTranslate="incomeCalculatorApp.transaction.type">Type</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="user.login"><span jhiTranslate="incomeCalculatorApp.transaction.user">User</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="category.title"><span jhiTranslate="incomeCalculatorApp.transaction.category">Category</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="transAccount.title"><span jhiTranslate="incomeCalculatorApp.transaction.transAccount">Trans Account</span> <span class="fa fa-sort"></span></th>
             <th></th>
             </tr>
             </thead>
@@ -34,11 +34,13 @@
                 <td>{{transaction.date | date:'mediumDate'}}</td>
                 <td jhiTranslate="{{'incomeCalculatorApp.TransactionType.' + transaction.type}}">{{transaction.type}}</td>
                 <td>
-                    {{transaction.user?.login}}
-                </td>
-                <td>
                     <div *ngIf="transaction.category">
                         <a [routerLink]="['../category', transaction.category?.id ]" >{{transaction.category?.title}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="transaction.transAccount">
+                        <a [routerLink]="['../trans-account', transaction.transAccount?.id ]" >{{transaction.transAccount?.title}}</a>
                     </div>
                 </td>
                 <td class="text-right">

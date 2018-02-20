@@ -1,0 +1,23 @@
+
+{
+    "incomeCalculatorApp": {
+        "accountCollection" : {
+            "home": {
+                "title": "Account Collections",
+                "createLabel": "Create a new Account Collection",
+                "createOrEditLabel": "Create or edit a Account Collection"
+            },
+            "created": "A new Account Collection is created with identifier {{ param }}",
+            "updated": "A Account Collection is updated with identifier {{ param }}",
+            "deleted": "A Account Collection is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Account Collection {{ id }}?"
+            },
+            "detail": {
+                "title": "Account Collection"
+            },
+            "title": "Title",
+            "transAccount": "Trans Account"
+        }
+    }
+}

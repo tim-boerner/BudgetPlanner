@@ -2,20 +2,18 @@
     "fluentMethods": true,
     "relationships": [
         {
-            "relationshipName": "user",
-            "otherEntityName": "user",
+            "relationshipName": "category",
+            "otherEntityName": "category",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "title"
+        },
+        {
+            "relationshipName": "transAccount",
+            "otherEntityName": "transAccount",
             "relationshipType": "many-to-one",
             "relationshipValidateRules": [
                 "required"
             ],
-            "otherEntityField": "login",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "transaction"
-        },
-        {
-            "relationshipName": "category",
-            "otherEntityName": "category",
-            "relationshipType": "many-to-one",
             "otherEntityField": "title"
         }
     ],

@@ -1,4 +1,4 @@
-import { BaseEntity, User } from './../../shared';
+import { BaseEntity } from './../../shared';
 
 export const enum TransactionType {
     'daily',
@@ -13,8 +13,8 @@ export class Transaction implements BaseEntity {
         public description?: string,
         public date?: any,
         public type?: TransactionType,
-        public user?: User,
         public category?: BaseEntity,
+        public transAccount?: BaseEntity,
     ) {
     }
 }

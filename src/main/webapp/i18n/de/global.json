@@ -9,6 +9,8 @@
                 "main": "Entitäten",
                 "transaction": "Transaction",
                 "category": "Category",
+                "transAccount": "Trans Account",
+                "accountCollection": "Account Collection",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
