@@ -120,7 +120,7 @@ public class TransAccountResource {
     @GetMapping("/trans-accounts/byAccColl/{id}")
     @Timed
     public ResponseEntity<List<TransAccount>> getTransAccountsByAccountCollection(@PathVariable Long id) {
-        log.debug("REST request to get TransAccount : {}", id);
+        log.debug("REST request to get TransAccount by AccountCollection: {}", id);
         List<TransAccount> transAccounts = transAccountService.findByAccountCollection(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(transAccounts));
     }
