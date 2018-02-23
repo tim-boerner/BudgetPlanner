@@ -112,7 +112,7 @@ public class TransAccountResource {
     }
 
     /**
-     * GET  /trans-accounts/:id : get the "id" transAccount.
+     * GET  /trans-accounts/byAccColl/:id : get the transAccounts by "id" of accountCollection.
      *
      * @param id the id of the accountCollection to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the transAccount, or with status 404 (Not Found)
