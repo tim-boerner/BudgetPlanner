@@ -14,16 +14,15 @@ sudo: required
 
 addons:
   chrome: stable
-  apt:
-      sources:
-        - mysql-5.7-trusty
-      packages:
-        - mysql-server
 
-env: DB=mysql
-
-services:
-  - mysql
+# install: true is deactivating the separate install-step, which runs before the script
+install: true
 
 script:
-- mvn clean test
+  - mvn clean test
+
+before_script:
+  - export DISPLAY=:99.0
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
+
