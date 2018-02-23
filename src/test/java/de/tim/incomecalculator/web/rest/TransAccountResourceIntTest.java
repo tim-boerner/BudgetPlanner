@@ -262,11 +262,11 @@ public class TransAccountResourceIntTest {
         accountCollection = accountCollectionService.save(accountCollection);
 
         transAccount.setAccountCollection(accountCollection);
-        TransAccount secondTransAccount = createEntity(em);
-        secondTransAccount.setAccountCollection(accountCollection);
+        TransAccount transAccount2 = createEntity(em);
+        transAccount2.setAccountCollection(accountCollection);
 
         transAccountService.save(transAccount);
-        transAccountService.save(secondTransAccount);
+        transAccountService.save(transAccount2);
         System.out.println("accountCollection.getId(): " + accountCollection.getId());
 
         // Get the transAccountList for accountCollection
@@ -275,7 +275,7 @@ public class TransAccountResourceIntTest {
                                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                                .andExpect(jsonPath("$.[*].id").value(hasItem(transAccount.getId().intValue())))
                                .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
-                               .andExpect(jsonPath("$.[*].id").value(hasItem(secondTransAccount.getId().intValue())))
+                               .andExpect(jsonPath("$.[*].id").value(hasItem(transAccount2.getId().intValue())))
                                .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)));
     }
 
