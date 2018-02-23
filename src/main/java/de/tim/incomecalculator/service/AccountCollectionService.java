@@ -45,7 +45,9 @@ public class AccountCollectionService {
     @Transactional(readOnly = true)
     public Page<AccountCollection> findAll(Pageable pageable) {
         log.debug("Request to get all AccountCollections");
-        return accountCollectionRepository.findAll(pageable);
+
+        Page<AccountCollection> all = accountCollectionRepository.findAll(pageable);
+        return all;
     }
 
     /**

@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 /**
  * Service Implementation for managing TransAccount.
@@ -68,5 +70,10 @@ public class TransAccountService {
     public void delete(Long id) {
         log.debug("Request to delete TransAccount : {}", id);
         transAccountRepository.delete(id);
+    }
+
+    public List<TransAccount> findByAccountCollection(Long id) {
+        log.debug("Request to get TransAccounts of Account collection: {}", id);
+        return transAccountRepository.findByAccountCollection_Id(id);
     }
 }

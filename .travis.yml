@@ -1,0 +1,29 @@
+# Travis continuous integration for kitodo-production
+
+language: java
+
+cache:
+
+dist: trusty
+
+jdk:
+  - oraclejdk8
+  - openjdk8
+
+sudo: required
+
+addons:
+  chrome: stable
+  apt:
+      sources:
+        - mysql-5.7-trusty
+      packages:
+        - mysql-server
+
+env: DB=mysql
+
+services:
+  - mysql
+
+script:
+- mvn clean test

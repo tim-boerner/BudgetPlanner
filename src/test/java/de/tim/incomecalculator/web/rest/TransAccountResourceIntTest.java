@@ -2,9 +2,11 @@ package de.tim.incomecalculator.web.rest;
 
 import de.tim.incomecalculator.IncomeCalculatorApp;
 
+import de.tim.incomecalculator.domain.AccountCollection;
 import de.tim.incomecalculator.domain.TransAccount;
 import de.tim.incomecalculator.domain.User;
 import de.tim.incomecalculator.repository.TransAccountRepository;
+import de.tim.incomecalculator.service.AccountCollectionService;
 import de.tim.incomecalculator.service.TransAccountService;
 import de.tim.incomecalculator.web.rest.errors.ExceptionTranslator;
 
@@ -48,6 +50,9 @@ public class TransAccountResourceIntTest {
 
     @Autowired
     private TransAccountService transAccountService;
+
+    @Autowired
+    private AccountCollectionService accountCollectionService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -248,4 +253,30 @@ public class TransAccountResourceIntTest {
         transAccount1.setId(null);
         assertThat(transAccount1).isNotEqualTo(transAccount2);
     }
+
+    @Test
+    @Transactional
+    public void findByAccountCollection() throws Exception {
+        // Initialize the database
+        AccountCollection accountCollection = AccountCollectionResourceIntTest.createEntity(em);
+        accountCollection = accountCollectionService.save(accountCollection);
+
+        transAccount.setAccountCollection(accountCollection);
+        TransAccount secondTransAccount = createEntity(em);
+        secondTransAccount.setAccountCollection(accountCollection);
+
+        transAccountService.save(transAccount);
+        transAccountService.save(secondTransAccount);
+        System.out.println("accountCollection.getId(): " + accountCollection.getId());
+
+        // Get the transAccountList for accountCollection
+        restTransAccountMockMvc.perform(get("/api/trans-accounts/byAccColl/{id}",accountCollection.getId()))
+                               .andExpect(status().isOk())
+                               .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                               .andExpect(jsonPath("$.[*].id").value(hasItem(transAccount.getId().intValue())))
+                               .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
+                               .andExpect(jsonPath("$.[*].id").value(hasItem(secondTransAccount.getId().intValue())))
+                               .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)));
+    }
+
 }
