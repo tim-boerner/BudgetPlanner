@@ -46,7 +46,6 @@ public class AccountCollectionService {
     public Page<AccountCollection> findAll(Pageable pageable) {
         log.debug("Request to get all AccountCollections");
         return accountCollectionRepository.findAll(pageable);
-
     }
 
     /**
