@@ -1,0 +1,29 @@
+# Travis continuous integration for kitodo-production
+
+language: java
+
+cache:
+
+dist: trusty
+
+jdk:
+  - oraclejdk8
+  - openjdk8
+
+sudo: required
+
+addons:
+  chrome: stable
+
+# install: true is deactivating the separate install-step, which runs before the script
+install: true
+
+script:
+  - mvn clean test -B
+
+before_script:
+  - export MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+  - export DISPLAY=:99.0
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
+

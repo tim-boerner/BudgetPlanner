@@ -112,6 +112,20 @@ public class TransAccountResource {
     }
 
     /**
+     * GET  /trans-accounts/byAccColl/:id : get the transAccounts by "id" of accountCollection.
+     *
+     * @param id the id of the accountCollection to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the transAccount, or with status 404 (Not Found)
+     */
+    @GetMapping("/trans-accounts/byAccColl/{id}")
+    @Timed
+    public ResponseEntity<List<TransAccount>> getTransAccountsByAccountCollection(@PathVariable Long id) {
+        log.debug("REST request to get TransAccount by AccountCollection: {}", id);
+        List<TransAccount> transAccounts = transAccountService.findByAccountCollection(id);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(transAccounts));
+    }
+
+    /**
      * DELETE  /trans-accounts/:id : delete the "id" transAccount.
      *
      * @param id the id of the transAccount to delete
