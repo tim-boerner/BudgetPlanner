@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 /**
  * Service Implementation for managing Transaction.
@@ -69,4 +71,18 @@ public class TransactionService {
         log.debug("Request to delete Transaction : {}", id);
         transactionRepository.delete(id);
     }
+
+    /**
+     * Get all the transactions.
+     *
+     * @param pageable the pagination information
+     * @param transAccountId the transAccount id
+     * @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public Page<Transaction> findByTransAccount(Pageable pageable, Long transAccountId) {
+        log.debug("Request to get all Transactions");
+        return transactionRepository.findByTransAccount_Id(pageable, transAccountId);
+    }
+
 }

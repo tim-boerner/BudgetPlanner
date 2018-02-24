@@ -124,4 +124,20 @@ public class TransactionResource {
         transactionService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
+
+    /**
+     * GET  /transactions/byAccount/:id : get all the transactions by transAccount.
+     *
+     * @param pageable the pagination information
+     * @param id of the transAccount
+     * @return the ResponseEntity with status 200 (OK) and the list of transactions in body
+     */
+    @GetMapping("/transactions/byAccount/{id}")
+    @Timed
+    public ResponseEntity<List<Transaction>> getTransactionsByTransAccount(Pageable pageable,@PathVariable Long id) {
+        log.debug("REST request to get a page of Transactions by TransAccount: {}", id);
+        Page<Transaction> page = transactionService.findByTransAccount(pageable, id);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/transactions/byAccount/");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
 }
