@@ -1,5 +1,6 @@
 package de.tim.incomecalculator.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -47,6 +48,7 @@ public class Transaction implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("user")
     private TransAccount transAccount;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

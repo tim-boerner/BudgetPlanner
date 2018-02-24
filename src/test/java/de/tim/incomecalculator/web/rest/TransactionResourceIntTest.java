@@ -5,6 +5,7 @@ import de.tim.incomecalculator.IncomeCalculatorApp;
 import de.tim.incomecalculator.domain.Transaction;
 import de.tim.incomecalculator.domain.TransAccount;
 import de.tim.incomecalculator.repository.TransactionRepository;
+import de.tim.incomecalculator.service.TransAccountService;
 import de.tim.incomecalculator.service.TransactionService;
 import de.tim.incomecalculator.web.rest.errors.ExceptionTranslator;
 
@@ -60,6 +61,9 @@ public class TransactionResourceIntTest {
 
     @Autowired
     private TransactionService transactionService;
+
+    @Autowired
+    private TransAccountService transAccountService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -331,5 +335,35 @@ public class TransactionResourceIntTest {
         assertThat(transaction1).isNotEqualTo(transaction2);
         transaction1.setId(null);
         assertThat(transaction1).isNotEqualTo(transaction2);
+    }
+
+    @Test
+    @Transactional
+    public void getTransactionsByTransAccount() throws Exception {
+        // Initialize the database
+        TransAccount transAccount = TransAccountResourceIntTest.createEntity(em);
+        transAccount = transAccountService.save(transAccount);
+
+        transaction.setTransAccount(transAccount);
+        Transaction transaction1 = transactionService.save(transaction);
+
+        Transaction transaction2 = createEntity(em);
+        transaction2.setTransAccount(transAccount);
+        transaction2 = transactionService.save(transaction2);
+
+        // Get all the transactionList
+        restTransactionMockMvc.perform(get("/api/transactions/byAccount/{id}?sort=id,desc", transAccount.getId()))
+                              .andExpect(status().isOk())
+                              .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                              .andExpect(jsonPath("$.[*].id").value(hasItem(transaction1.getId().intValue())))
+                              .andExpect(jsonPath("$.[*].value").value(hasItem(DEFAULT_VALUE.doubleValue())))
+                              .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
+                              .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
+                              .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
+                              .andExpect(jsonPath("$.[*].id").value(hasItem(transaction2.getId().intValue())))
+                              .andExpect(jsonPath("$.[*].value").value(hasItem(DEFAULT_VALUE.doubleValue())))
+                              .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
+                              .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
+                              .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString()))).andReturn();
     }
 }

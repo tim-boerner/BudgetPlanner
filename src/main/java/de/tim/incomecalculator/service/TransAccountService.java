@@ -72,6 +72,11 @@ public class TransAccountService {
         transAccountRepository.delete(id);
     }
 
+    /**
+     * Get all TransAccount by AccountCollection
+     * @param id
+     * @return the list of TransAccounts
+     */
     public List<TransAccount> findByAccountCollection(Long id) {
         log.debug("Request to get TransAccounts of Account collection: {}", id);
         return transAccountRepository.findByAccountCollection_Id(id);
