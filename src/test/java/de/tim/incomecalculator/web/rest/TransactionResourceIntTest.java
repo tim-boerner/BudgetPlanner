@@ -53,8 +53,8 @@ public class TransactionResourceIntTest {
     private static final LocalDate DEFAULT_DATE = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_DATE = LocalDate.now(ZoneId.systemDefault());
 
-    private static final TransactionType DEFAULT_TYPE = TransactionType.daily;
-    private static final TransactionType UPDATED_TYPE = TransactionType.monthly;
+    private static final TransactionType DEFAULT_TYPE = TransactionType.DAILY;
+    private static final TransactionType UPDATED_TYPE = TransactionType.MONTHLY;
 
     @Autowired
     private TransactionRepository transactionRepository;

@@ -39,7 +39,7 @@
         {
             "fieldName": "type",
             "fieldType": "TransactionType",
-            "fieldValues": "daily,monthly,yearly",
+            "fieldValues": "DAILY,MONTHLY,YEARLY,ONCE",
             "fieldValidateRules": [
                 "required"
             ]
