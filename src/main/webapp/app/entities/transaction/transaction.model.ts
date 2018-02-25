@@ -1,9 +1,10 @@
 import { BaseEntity } from './../../shared';
 
 export const enum TransactionType {
-    'daily',
-    'monthly',
-    'yearly'
+    'DAILY',
+    'MONTHLY',
+    'YEARLY',
+    'ONCE'
 }
 
 export class Transaction implements BaseEntity {
