@@ -39,6 +39,9 @@ export const transAccountRoute: Routes = [
     }, {
         path: 'trans-account/:id',
         component: TransAccountDetailComponent,
+        resolve: {
+            'pagingParams': TransAccountResolvePagingParams
+        },
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'incomeCalculatorApp.transAccount.home.title'
