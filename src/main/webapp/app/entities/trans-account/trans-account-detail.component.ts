@@ -113,7 +113,6 @@ export class TransAccountDetailComponent implements OnInit, OnDestroy {
         }
     }
 
-
         sort() {
         const result = [this.predicate + ',' + (this.reverse ? 'asc' : 'desc')];
         if (this.predicate !== 'id') {
