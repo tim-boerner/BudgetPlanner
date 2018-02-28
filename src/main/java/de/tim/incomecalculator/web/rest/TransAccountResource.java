@@ -112,12 +112,12 @@ public class TransAccountResource {
     }
 
     /**
-     * GET  /trans-accounts/byAccColl/:id : get the transAccounts by "id" of accountCollection.
+     * GET  /trans-accounts/by-acc-coll/:id : get the transAccounts by "id" of accountCollection.
      *
      * @param id the id of the accountCollection to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the transAccount, or with status 404 (Not Found)
      */
-    @GetMapping("/trans-accounts/byAccColl/{id}")
+    @GetMapping("/trans-accounts/by-acc-coll/{id}")
     @Timed
     public ResponseEntity<List<TransAccount>> getTransAccountsByAccountCollection(@PathVariable Long id) {
         log.debug("REST request to get TransAccount by AccountCollection: {}", id);

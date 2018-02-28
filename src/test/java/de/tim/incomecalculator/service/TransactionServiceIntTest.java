@@ -40,7 +40,7 @@ public class TransactionServiceIntTest {
 
         Transaction transaction = new Transaction();
         transaction.setDate(date);
-        transaction.setValue(1.0);
+        transaction.setValue(5.0);
         transaction.setTransAccount(account);
         transaction.setType(type);
 
@@ -50,7 +50,7 @@ public class TransactionServiceIntTest {
     public static Transaction generateTransactionByTransAccountAndTypeAndLocalDate(TransAccount account, TransactionType type, LocalDate date) {
         Transaction transaction = new Transaction();
         transaction.setDate(date);
-        transaction.setValue(1.0);
+        transaction.setValue(5.0);
         transaction.setTransAccount(account);
         transaction.setType(type);
 
@@ -60,7 +60,7 @@ public class TransactionServiceIntTest {
     public static Transaction generateTransactionByTransAccountAndLocalDate(TransAccount account, LocalDate date) {
         Transaction transaction = new Transaction();
         transaction.setDate(date);
-        transaction.setValue(1.0);
+        transaction.setValue(5.0);
         transaction.setTransAccount(account);
         transaction.setType(TransactionType.DAILY);
 
@@ -226,5 +226,34 @@ public class TransactionServiceIntTest {
 
         transactions = transactionService.findByTransAccountAndYearAndMonthAndTypeIsNot(transAccount.getId(), 2016,5,TransactionType.MONTHLY);
         assertThat(transactions.size()).isEqualTo(3);
+    }
+
+    @Test
+    public void testGetCurrentBalanceOfAccount() {
+        User user = UserServiceIntTest.generateUser();
+        userRepository.saveAndFlush(user);
+
+        TransAccount transAccount = new TransAccount();
+        transAccount.setUser(user);
+        transAccountService.save(transAccount);
+
+        Transaction transaction = generateTransactionByTransAccountAndTypeAndLocalDate(transAccount,TransactionType.ONCE,LocalDate.of(2016,5,10));
+        transactionService.save(transaction);
+        transaction = generateTransactionByTransAccountAndTypeAndLocalDate(transAccount,TransactionType.MONTHLY,LocalDate.of(2016,5,10));
+        transactionService.save(transaction);
+        transaction = generateTransactionByTransAccountAndTypeAndLocalDate(transAccount,TransactionType.ONCE,LocalDate.of(2016,5,5));
+        transactionService.save(transaction);
+        transaction = generateTransactionByTransAccountAndTypeAndLocalDate(transAccount,TransactionType.YEARLY,LocalDate.of(2016,5,28));
+        transactionService.save(transaction);
+        transaction = generateTransactionByTransAccountAndTypeAndLocalDate(transAccount,TransactionType.ONCE,LocalDate.of(2016,12,10));
+        transactionService.save(transaction);
+        transaction = generateTransactionByTransAccountAndTypeAndLocalDate(transAccount,TransactionType.ONCE,LocalDate.of(2017,5,10));
+        transactionService.save(transaction);
+        transaction = generateTransactionByTransAccountAndTypeAndLocalDate(transAccount,TransactionType.MONTHLY,LocalDate.of(2015,1,1));
+        transactionService.save(transaction);
+
+        double balance = transactionService.getBalanceOfYearAndMonthByTransAccount(transAccount.getId(),2016,5);
+        assertThat(balance).isEqualTo(10.0);
+
     }
 }

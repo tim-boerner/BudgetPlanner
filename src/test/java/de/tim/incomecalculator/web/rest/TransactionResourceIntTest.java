@@ -1,14 +1,13 @@
 package de.tim.incomecalculator.web.rest;
 
 import de.tim.incomecalculator.IncomeCalculatorApp;
-
-import de.tim.incomecalculator.domain.Transaction;
 import de.tim.incomecalculator.domain.TransAccount;
+import de.tim.incomecalculator.domain.Transaction;
+import de.tim.incomecalculator.domain.enumeration.TransactionType;
 import de.tim.incomecalculator.repository.TransactionRepository;
 import de.tim.incomecalculator.service.TransAccountService;
 import de.tim.incomecalculator.service.TransactionService;
 import de.tim.incomecalculator.web.rest.errors.ExceptionTranslator;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +34,6 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import de.tim.incomecalculator.domain.enumeration.TransactionType;
 /**
  * Test class for the TransactionResource REST controller.
  *
@@ -86,24 +85,24 @@ public class TransactionResourceIntTest {
         MockitoAnnotations.initMocks(this);
         final TransactionResource transactionResource = new TransactionResource(transactionService);
         this.restTransactionMockMvc = MockMvcBuilders.standaloneSetup(transactionResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build();
+                                                     .setCustomArgumentResolvers(pageableArgumentResolver)
+                                                     .setControllerAdvice(exceptionTranslator)
+                                                     .setConversionService(createFormattingConversionService())
+                                                     .setMessageConverters(jacksonMessageConverter)
+                                                     .build();
     }
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
     public static Transaction createEntity(EntityManager em) {
-        Transaction transaction = new Transaction()
-            .value(DEFAULT_VALUE)
-            .description(DEFAULT_DESCRIPTION)
-            .date(DEFAULT_DATE)
-            .type(DEFAULT_TYPE);
+        Transaction transaction = new Transaction().value(DEFAULT_VALUE)
+                                                   .description(DEFAULT_DESCRIPTION)
+                                                   .date(DEFAULT_DATE)
+                                                   .type(DEFAULT_TYPE);
         // Add required entity
         TransAccount transAccount = TransAccountResourceIntTest.createEntity(em);
         em.persist(transAccount);
@@ -123,10 +122,9 @@ public class TransactionResourceIntTest {
         int databaseSizeBeforeCreate = transactionRepository.findAll().size();
 
         // Create the Transaction
-        restTransactionMockMvc.perform(post("/api/transactions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(transaction)))
-            .andExpect(status().isCreated());
+        restTransactionMockMvc.perform(post("/api/transactions").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                                                                .content(TestUtil.convertObjectToJsonBytes(transaction)))
+                              .andExpect(status().isCreated());
 
         // Validate the Transaction in the database
         List<Transaction> transactionList = transactionRepository.findAll();
@@ -147,10 +145,9 @@ public class TransactionResourceIntTest {
         transaction.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restTransactionMockMvc.perform(post("/api/transactions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(transaction)))
-            .andExpect(status().isBadRequest());
+        restTransactionMockMvc.perform(post("/api/transactions").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                                                                .content(TestUtil.convertObjectToJsonBytes(transaction)))
+                              .andExpect(status().isBadRequest());
 
         // Validate the Transaction in the database
         List<Transaction> transactionList = transactionRepository.findAll();
@@ -166,10 +163,9 @@ public class TransactionResourceIntTest {
 
         // Create the Transaction, which fails.
 
-        restTransactionMockMvc.perform(post("/api/transactions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(transaction)))
-            .andExpect(status().isBadRequest());
+        restTransactionMockMvc.perform(post("/api/transactions").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                                                                .content(TestUtil.convertObjectToJsonBytes(transaction)))
+                              .andExpect(status().isBadRequest());
 
         List<Transaction> transactionList = transactionRepository.findAll();
         assertThat(transactionList).hasSize(databaseSizeBeforeTest);
@@ -184,10 +180,9 @@ public class TransactionResourceIntTest {
 
         // Create the Transaction, which fails.
 
-        restTransactionMockMvc.perform(post("/api/transactions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(transaction)))
-            .andExpect(status().isBadRequest());
+        restTransactionMockMvc.perform(post("/api/transactions").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                                                                .content(TestUtil.convertObjectToJsonBytes(transaction)))
+                              .andExpect(status().isBadRequest());
 
         List<Transaction> transactionList = transactionRepository.findAll();
         assertThat(transactionList).hasSize(databaseSizeBeforeTest);
@@ -202,10 +197,9 @@ public class TransactionResourceIntTest {
 
         // Create the Transaction, which fails.
 
-        restTransactionMockMvc.perform(post("/api/transactions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(transaction)))
-            .andExpect(status().isBadRequest());
+        restTransactionMockMvc.perform(post("/api/transactions").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                                                                .content(TestUtil.convertObjectToJsonBytes(transaction)))
+                              .andExpect(status().isBadRequest());
 
         List<Transaction> transactionList = transactionRepository.findAll();
         assertThat(transactionList).hasSize(databaseSizeBeforeTest);
@@ -219,13 +213,13 @@ public class TransactionResourceIntTest {
 
         // Get all the transactionList
         restTransactionMockMvc.perform(get("/api/transactions?sort=id,desc"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(transaction.getId().intValue())))
-            .andExpect(jsonPath("$.[*].value").value(hasItem(DEFAULT_VALUE.doubleValue())))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
-            .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
-            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())));
+                              .andExpect(status().isOk())
+                              .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                              .andExpect(jsonPath("$.[*].id").value(hasItem(transaction.getId().intValue())))
+                              .andExpect(jsonPath("$.[*].value").value(hasItem(DEFAULT_VALUE.doubleValue())))
+                              .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
+                              .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
+                              .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())));
     }
 
     @Test
@@ -236,21 +230,20 @@ public class TransactionResourceIntTest {
 
         // Get the transaction
         restTransactionMockMvc.perform(get("/api/transactions/{id}", transaction.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(transaction.getId().intValue()))
-            .andExpect(jsonPath("$.value").value(DEFAULT_VALUE.doubleValue()))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
-            .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()))
-            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()));
+                              .andExpect(status().isOk())
+                              .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                              .andExpect(jsonPath("$.id").value(transaction.getId().intValue()))
+                              .andExpect(jsonPath("$.value").value(DEFAULT_VALUE.doubleValue()))
+                              .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
+                              .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()))
+                              .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()));
     }
 
     @Test
     @Transactional
     public void getNonExistingTransaction() throws Exception {
         // Get the transaction
-        restTransactionMockMvc.perform(get("/api/transactions/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restTransactionMockMvc.perform(get("/api/transactions/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -265,16 +258,11 @@ public class TransactionResourceIntTest {
         Transaction updatedTransaction = transactionRepository.findOne(transaction.getId());
         // Disconnect from session so that the updates on updatedTransaction are not directly saved in db
         em.detach(updatedTransaction);
-        updatedTransaction
-            .value(UPDATED_VALUE)
-            .description(UPDATED_DESCRIPTION)
-            .date(UPDATED_DATE)
-            .type(UPDATED_TYPE);
+        updatedTransaction.value(UPDATED_VALUE).description(UPDATED_DESCRIPTION).date(UPDATED_DATE).type(UPDATED_TYPE);
 
-        restTransactionMockMvc.perform(put("/api/transactions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedTransaction)))
-            .andExpect(status().isOk());
+        restTransactionMockMvc.perform(put("/api/transactions").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                                                               .content(TestUtil.convertObjectToJsonBytes(updatedTransaction)))
+                              .andExpect(status().isOk());
 
         // Validate the Transaction in the database
         List<Transaction> transactionList = transactionRepository.findAll();
@@ -294,10 +282,9 @@ public class TransactionResourceIntTest {
         // Create the Transaction
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
-        restTransactionMockMvc.perform(put("/api/transactions")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(transaction)))
-            .andExpect(status().isCreated());
+        restTransactionMockMvc.perform(put("/api/transactions").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                                                               .content(TestUtil.convertObjectToJsonBytes(transaction)))
+                              .andExpect(status().isCreated());
 
         // Validate the Transaction in the database
         List<Transaction> transactionList = transactionRepository.findAll();
@@ -313,9 +300,8 @@ public class TransactionResourceIntTest {
         int databaseSizeBeforeDelete = transactionRepository.findAll().size();
 
         // Get the transaction
-        restTransactionMockMvc.perform(delete("/api/transactions/{id}", transaction.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
-            .andExpect(status().isOk());
+        restTransactionMockMvc.perform(delete("/api/transactions/{id}", transaction.getId()).accept(TestUtil.APPLICATION_JSON_UTF8))
+                              .andExpect(status().isOk());
 
         // Validate the database is empty
         List<Transaction> transactionList = transactionRepository.findAll();
@@ -352,7 +338,7 @@ public class TransactionResourceIntTest {
         transaction2 = transactionService.save(transaction2);
 
         // Get all the transactionList
-        restTransactionMockMvc.perform(get("/api/transactions/byAccount/{id}?sort=id,desc", transAccount.getId()))
+        restTransactionMockMvc.perform(get("/api/transactions/account/{id}?sort=id,desc", transAccount.getId()))
                               .andExpect(status().isOk())
                               .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                               .andExpect(jsonPath("$.[*].id").value(hasItem(transaction1.getId().intValue())))
@@ -364,6 +350,44 @@ public class TransactionResourceIntTest {
                               .andExpect(jsonPath("$.[*].value").value(hasItem(DEFAULT_VALUE.doubleValue())))
                               .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
                               .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
-                              .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString()))).andReturn();
+                              .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
+                              .andReturn();
+    }
+
+    @Test
+    @Transactional
+    public void getTransactionsByTransAccountByDate() throws Exception {
+        // Initialize the database
+        TransAccount transAccount = TransAccountResourceIntTest.createEntity(em);
+        transAccount = transAccountService.save(transAccount);
+
+        Transaction transaction1 = createEntity(em);
+        transaction1.setTransAccount(transAccount);
+        transaction1.setType(TransactionType.ONCE);
+        transaction1 = transactionService.save(transaction1);
+
+        Transaction transaction2 = createEntity(em);
+        transaction2.setTransAccount(transAccount);
+        transaction2.setType(TransactionType.ONCE);
+        transaction2 = transactionService.save(transaction2);
+
+        // Get all the transactionList
+        MvcResult mvcResult = restTransactionMockMvc.perform(get("/api/transactions/account/{id}/{year}/{month}", transAccount
+            .getId(), transaction.getDate().getYear(), transaction.getDate().getMonthValue()))
+                                                    .andExpect(status().isOk())
+                                                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                                                    .andExpect(jsonPath("$.[*].id").value(hasItem(transaction1.getId()
+                                                                                                              .intValue())))
+                                                    .andExpect(jsonPath("$.[*].value").value(hasItem(DEFAULT_VALUE.doubleValue())))
+                                                    .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+                                                    .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
+                                                    .andExpect(jsonPath("$.[*].type").value(hasItem(transaction1.getType().toString())))
+                                                    .andExpect(jsonPath("$.[*].id").value(hasItem(transaction2.getId()
+                                                                                                              .intValue())))
+                                                    .andExpect(jsonPath("$.[*].value").value(hasItem(DEFAULT_VALUE.doubleValue())))
+                                                    .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+                                                    .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
+                                                    .andExpect(jsonPath("$.[*].type").value(hasItem(transaction2.getType().toString())))
+                                                    .andReturn();
     }
 }

@@ -2,6 +2,7 @@ package de.tim.incomecalculator.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import de.tim.incomecalculator.domain.Transaction;
+import de.tim.incomecalculator.domain.enumeration.TransactionType;
 import de.tim.incomecalculator.service.TransactionService;
 import de.tim.incomecalculator.web.rest.errors.BadRequestAlertException;
 import de.tim.incomecalculator.web.rest.util.HeaderUtil;
@@ -126,18 +127,38 @@ public class TransactionResource {
     }
 
     /**
-     * GET  /transactions/byAccount/:id : get all the transactions by transAccount.
+     * GET  /transactions/account/:id : get all the transactions by transAccount.
      *
      * @param pageable the pagination information
      * @param id of the transAccount
      * @return the ResponseEntity with status 200 (OK) and the list of transactions in body
      */
-    @GetMapping("/transactions/byAccount/{id}")
+    @GetMapping("/transactions/account/{id}")
     @Timed
     public ResponseEntity<List<Transaction>> getTransactionsByTransAccount(Pageable pageable,@PathVariable Long id) {
         log.debug("REST request to get a page of Transactions by TransAccount: {}", id);
         Page<Transaction> page = transactionService.findByTransAccount(pageable, id);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/transactions/byAccount/");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/transactions/account/" + id);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
+
+    /**
+     * GET  /transactions/account/:id/:year/month : get all the transactions by transAccount for specified year and month.
+     *
+     * @param id of the transAccount
+     * @param year the year
+     * @param month the month
+     * @return the ResponseEntity with status 200 (OK) and the list of transactions in body
+     */
+    @GetMapping("/transactions/account/{id}/{year}/{month}")
+    @Timed
+    public ResponseEntity<List<Transaction>> getTransactionsByTransAccount(@PathVariable Long id,@PathVariable int year,@PathVariable int month) {
+        log.debug("REST request to get a page of Transactions by TransAccount: {} of year {} and month {}", id, year, month);
+        List<Transaction> transactions = transactionService.findByTransAccountAndYearAndMonthAndType(id, year, month, TransactionType.ONCE);
+        return new ResponseEntity<>(transactions, HttpStatus.OK);
+    }
+
+
+
+
 }

@@ -181,4 +181,23 @@ public class TransactionService {
         LocalDate endDate = LocalDate.of(year, month, startDate.lengthOfMonth());
         return transactionRepository.findByTransAccount_IdAndDateBetweenAndTypeIsNot(transAccountId, startDate, endDate, type);
     }
+
+    /**
+     * Get the balance of the current month for given trans account.
+     *
+     * @param transAccountId the transAccount id
+     * @return the balance
+     */
+    @Transactional(readOnly = true)
+    public double getBalanceOfYearAndMonthByTransAccount(Long transAccountId, int year, int month) {
+        log.debug("Request to get balance of current month for transAccount {}", transAccountId);
+
+        List<Transaction> transactions = findByTransAccountAndYearAndMonthAndType(transAccountId,year,month,TransactionType.ONCE);
+        double balance = 0.0;
+
+        for(Transaction transaction : transactions) {
+            balance = balance + transaction.getValue();
+        }
+        return balance;
+    }
 }
