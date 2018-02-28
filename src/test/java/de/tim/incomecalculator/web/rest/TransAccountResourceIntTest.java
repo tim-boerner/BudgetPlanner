@@ -267,10 +267,9 @@ public class TransAccountResourceIntTest {
 
         transAccountService.save(transAccount);
         transAccountService.save(transAccount2);
-        System.out.println("accountCollection.getId(): " + accountCollection.getId());
 
         // Get the transAccountList for accountCollection
-        restTransAccountMockMvc.perform(get("/api/trans-accounts/byAccColl/{id}",accountCollection.getId()))
+        restTransAccountMockMvc.perform(get("/api/trans-accounts/by-acc-coll/{id}",accountCollection.getId()))
                                .andExpect(status().isOk())
                                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                                .andExpect(jsonPath("$.[*].id").value(hasItem(transAccount.getId().intValue())))
