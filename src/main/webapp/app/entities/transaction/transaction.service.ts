@@ -46,6 +46,11 @@ export class TransactionService {
             .map((res: HttpResponse<Transaction[]>) => this.convertArrayResponse(res));
     }
 
+    queryByAccountAndDate(id: number, year: number, month: number): Observable<HttpResponse<Transaction[]>> {
+        return this.http.get<Transaction[]>(`${this.resourceUrl}/account/${id}/${year}/${month}`, { observe: 'response' })
+            .map((res: HttpResponse<Transaction[]>) => this.convertArrayResponse(res));
+    }
+
     delete(id: number): Observable<HttpResponse<any>> {
         return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response'});
     }

@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { IncomeCalculatorSharedModule } from '../shared';
 
 import { HOME_ROUTE, HomeComponent } from './';
+import { TransDataComponent } from './trans-data/trans-data.component';
 
 @NgModule({
     imports: [
@@ -12,6 +13,7 @@ import { HOME_ROUTE, HomeComponent } from './';
     ],
     declarations: [
         HomeComponent,
+        TransDataComponent,
     ],
     entryComponents: [
     ],
