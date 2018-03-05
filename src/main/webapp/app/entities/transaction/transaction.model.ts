@@ -1,4 +1,5 @@
 import { BaseEntity } from './../../shared';
+import { Category } from '../category/category.model';
 
 export const enum TransactionType {
     'DAILY',
@@ -14,7 +15,7 @@ export class Transaction implements BaseEntity {
         public description?: string,
         public date?: any,
         public type?: TransactionType,
-        public category?: BaseEntity,
+        public category?: Category,
         public transAccount?: BaseEntity,
     ) {
     }

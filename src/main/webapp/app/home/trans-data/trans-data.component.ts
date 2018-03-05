@@ -11,12 +11,19 @@ import { JhiAlertService } from 'ng-jhipster';
 } )
 export class TransDataComponent implements OnInit {
     transactions: Transaction[];
+    transactionsIncome: Transaction[];
+    transactionsExpense: Transaction[];
     balance: number;
     income: number;
     expense: number;
+    dataIncomeExpense: any;
+    dataExpense: any;
+    categoryLabels: string[];
 
     constructor( private transactionService: TransactionService,
                  private jhiAlertService: JhiAlertService ) {
+        this.dataIncomeExpense = {};
+        this.dataExpense = {};
     }
 
     ngOnInit() {
@@ -28,7 +35,7 @@ export class TransDataComponent implements OnInit {
         const month = d.getMonth() + 1;
         const year = d.getFullYear();
         this.transactionService.queryByAccountAndDate( 1, year, month ).subscribe(
-            ( res: HttpResponse<Transaction[]> ) => this.onSuccess( res.body ),
+            ( res: HttpResponse<Transaction[]> ) => this.onLoadTransactionsSuccess( res.body ),
             ( res: HttpErrorResponse ) => this.onError( res.message )
         );
     }
@@ -45,39 +52,96 @@ export class TransDataComponent implements OnInit {
         return balance;
     }
 
-    private getIncome( transactions: Transaction[] ): number {
-        let income = 0.0;
+    private getSumsByCategories(transactions: Transaction[], categories: string[]): number[] {
+        const sums: number[] = [];
+        categories.forEach( function( category ) {
+            let sum = 0.0;
+            transactions.forEach( function( transaction ) {
+                if (transaction.category.title === category) {
+                    sum = sum + transaction.value;
+                }
+            } );
+            sums.push(sum * -1);
+        } );
+        return sums;
+    }
+
+    private getIncomeTransactions( transactions: Transaction[] ): Transaction[] {
+        const income: Transaction[] = [];
         transactions.forEach( function( transaction ) {
             if (transaction.value > 0) {
-                income = income + transaction.value;
+                income.push(transaction);
             }
         } );
         return income;
     }
 
-    private getExpense( transactions: Transaction[] ): number {
-        let expense = 0.0;
+    private getExpenseTransactions( transactions: Transaction[] ): Transaction[] {
+        const expense: Transaction[] = [];
         transactions.forEach( function( transaction ) {
             if (transaction.value < 0) {
-                expense = expense + transaction.value;
+                expense.push(transaction);
             }
         } );
-        return expense * -1.0;
+        return expense;
     }
 
-    private onSuccess( data ) {
+    private getCategories( transactions: Transaction[] ): string[] {
+        const categoryLabels: string[] = [];
+        transactions.forEach( function( transaction ) {
+            if (!categoryLabels.some( (x) => x === transaction.category.title )) {
+                categoryLabels.push( transaction.category.title );
+            }
+        } );
+        return categoryLabels;
+    }
+
+    private onLoadTransactionsSuccess( data ) {
         this.transactions = data;
+        this.categoryLabels = this.getCategories( this.transactions );
+        this.transactionsIncome = this.getIncomeTransactions(this.transactions);
+        this.transactionsExpense = this.getExpenseTransactions(this.transactions);
         this.balance = this.getSum( this.transactions );
-        this.income = this.getIncome( this.transactions );
-        this.expense = this.getExpense( this.transactions );
+        this.income = this.getSum( this.transactionsIncome );
+        this.expense = this.getSum( this.transactionsExpense ) * -1;
+
+        this.dataIncomeExpense = {
+            labels: [ 'income', 'expence' ],
+            datasets: [
+                {
+                    data: [ this.income, this.expense ],
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB'
+                    ],
+                    hoverBackgroundColor: [
+                        '#ff6384',
+                        '#36A2EB'
+                    ]
+                }
+            ]
+        };
+
+        this.dataExpense = {
+            labels: this.categoryLabels,
+            datasets: [
+                {
+                    data: this.getSumsByCategories(this.transactionsExpense, this.categoryLabels),
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB'
+                    ],
+                    hoverBackgroundColor: [
+                        '#ff6384',
+                        '#36A2EB'
+                    ]
+                }
+            ]
+        };
     }
 
     private onError( error ) {
         this.jhiAlertService.error( error.message, null, null );
-    }
-
-    getColorByValue() {
-
     }
 
 }
