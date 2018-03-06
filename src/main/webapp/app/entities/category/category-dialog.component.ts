@@ -17,7 +17,6 @@ import { CategoryService } from './category.service';
 export class CategoryDialogComponent implements OnInit {
 
     category: Category;
-    color: string;
     isSaving: boolean;
 
     constructor(
@@ -29,7 +28,6 @@ export class CategoryDialogComponent implements OnInit {
 
     ngOnInit() {
         this.isSaving = false;
-        this.color = '#23747d';
     }
 
     clear() {
