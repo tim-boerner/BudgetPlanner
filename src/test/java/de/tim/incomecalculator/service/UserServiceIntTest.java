@@ -43,9 +43,8 @@ public class UserServiceIntTest {
 
     private User user;
 
-    @Before
-    public void init() {
-        user = new User();
+    public static User generateUser() {
+        User user = new User();
         user.setLogin("johndoe");
         user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
@@ -54,6 +53,12 @@ public class UserServiceIntTest {
         user.setLastName("doe");
         user.setImageUrl("http://placehold.it/50x50");
         user.setLangKey("en");
+        return user;
+    }
+
+    @Before
+    public void init() {
+        user = generateUser();
     }
 
     @Test

@@ -19,13 +19,13 @@ import { IncomeCalculatorEntityModule } from './entities/entity.module';
 import { PaginationConfig } from './blocks/config/uib-pagination.config';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import {
-    JhiMainComponent,
-    NavbarComponent,
-    FooterComponent,
-    ProfileService,
-    PageRibbonComponent,
-    ActiveMenuDirective,
-    ErrorComponent
+JhiMainComponent,
+NavbarComponent,
+FooterComponent,
+ProfileService,
+PageRibbonComponent,
+ActiveMenuDirective,
+ErrorComponent,
 } from './layouts';
 
 @NgModule({
@@ -37,7 +37,7 @@ import {
         IncomeCalculatorHomeModule,
         IncomeCalculatorAdminModule,
         IncomeCalculatorAccountModule,
-        IncomeCalculatorEntityModule,
+        IncomeCalculatorEntityModule
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [

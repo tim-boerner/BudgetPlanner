@@ -42,7 +42,12 @@ export class TransactionService {
 
     queryByAccount(id: number, req?: any): Observable<HttpResponse<Transaction[]>> {
         const options = createRequestOption(req);
-        return this.http.get<Transaction[]>(`${this.resourceUrl}/byAccount/${id}`, { params: options, observe: 'response' })
+        return this.http.get<Transaction[]>(`${this.resourceUrl}/account/${id}`, { params: options, observe: 'response' })
+            .map((res: HttpResponse<Transaction[]>) => this.convertArrayResponse(res));
+    }
+
+    queryByAccountAndDate(id: number, year: number, month: number): Observable<HttpResponse<Transaction[]>> {
+        return this.http.get<Transaction[]>(`${this.resourceUrl}/account/${id}/${year}/${month}`, { observe: 'response' })
             .map((res: HttpResponse<Transaction[]>) => this.convertArrayResponse(res));
     }
 

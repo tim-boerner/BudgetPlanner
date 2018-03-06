@@ -1,0 +1,33 @@
+<div class="container">
+    <div class="row justify-content-md">
+        <div class="col-md-auto">
+            <div class="card text-center balance-card">
+                <h5 class="card-title">Balance</h5>
+                <p class="card-text">{{balance | number:'1.2'}} €</p>
+            </div>
+        </div>
+        <div class="col-md-auto">
+            <div class="card text-center balance-card">
+                <h5 class="card-title">Income</h5>
+                <p class="card-text">{{income | number:'1.2'}} €</p>
+            </div>
+        </div>
+        <div class="col-md-auto">
+            <div class="card text-center balance-card">
+                <h5 class="card-title">Expense</h5>
+                <p class="card-text">{{expense | number:'1.2'}} €</p>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-md">
+        <div class="col-md-auto">
+            <p-chart type="doughnut"
+                     [data]="dataIncomeExpense"></p-chart>
+        </div>
+        <div class="col-md-auto">
+            <p-chart type="doughnut"
+                     [data]="dataExpense"></p-chart>
+        </div>
+    </div>
+</div>
+
