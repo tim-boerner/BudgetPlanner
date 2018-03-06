@@ -17,7 +17,6 @@ import { IncomeCalculatorAdminModule } from './admin/admin.module';
 import { IncomeCalculatorAccountModule } from './account/account.module';
 import { IncomeCalculatorEntityModule } from './entities/entity.module';
 import { PaginationConfig } from './blocks/config/uib-pagination.config';
-import { IncomeCalculatorDashboardModule } from './dashboard/dashboard.module';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import {
 JhiMainComponent,
@@ -38,8 +37,7 @@ ErrorComponent,
         IncomeCalculatorHomeModule,
         IncomeCalculatorAdminModule,
         IncomeCalculatorAccountModule,
-        IncomeCalculatorEntityModule,
-        IncomeCalculatorDashboardModule,
+        IncomeCalculatorEntityModule
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [
