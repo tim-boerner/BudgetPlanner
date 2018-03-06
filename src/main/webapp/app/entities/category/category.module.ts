@@ -1,5 +1,6 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 import { IncomeCalculatorSharedModule } from '../../shared';
 import {
@@ -24,6 +25,7 @@ const ENTITY_STATES = [
 @NgModule({
     imports: [
         IncomeCalculatorSharedModule,
+        ColorPickerModule,
         RouterModule.forChild(ENTITY_STATES)
     ],
     declarations: [

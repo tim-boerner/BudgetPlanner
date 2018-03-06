@@ -19,6 +19,7 @@ export class TransDataComponent implements OnInit {
     dataIncomeExpense: any;
     dataExpense: any;
     categoryLabels: string[];
+    color: string;
 
     constructor( private transactionService: TransactionService,
                  private jhiAlertService: JhiAlertService ) {
@@ -86,7 +87,7 @@ export class TransDataComponent implements OnInit {
         return expense;
     }
 
-    private getCategories( transactions: Transaction[] ): string[] {
+    private getCategoriesByTransactions( transactions: Transaction[] ): string[] {
         const categoryLabels: string[] = [];
         transactions.forEach( function( transaction ) {
             if (!categoryLabels.some( (x) => x === transaction.category.title )) {
@@ -96,9 +97,19 @@ export class TransDataComponent implements OnInit {
         return categoryLabels;
     }
 
+    private getColorsOfCategoriesByTransactions( transactions: Transaction[] ): string[] {
+        const categoryColors: string[] = [];
+        transactions.forEach( function( transaction ) {
+            if (!categoryColors.some( ( x ) => x === transaction.category.color )) {
+                categoryColors.push( transaction.category.color );
+            }
+        } );
+        return categoryColors;
+    }
+
     private onLoadTransactionsSuccess( data ) {
         this.transactions = data;
-        this.categoryLabels = this.getCategories( this.transactions );
+        this.categoryLabels = this.getCategoriesByTransactions( this.transactions );
         this.transactionsIncome = this.getIncomeTransactions(this.transactions);
         this.transactionsExpense = this.getExpenseTransactions(this.transactions);
         this.balance = this.getSum( this.transactions );
@@ -127,14 +138,8 @@ export class TransDataComponent implements OnInit {
             datasets: [
                 {
                     data: this.getSumsByCategories(this.transactionsExpense, this.categoryLabels),
-                    backgroundColor: [
-                        '#FF6384',
-                        '#36A2EB'
-                    ],
-                    hoverBackgroundColor: [
-                        '#ff6384',
-                        '#36A2EB'
-                    ]
+                    backgroundColor: this.getColorsOfCategoriesByTransactions(this.transactionsExpense),
+                    hoverBackgroundColor: this.getColorsOfCategoriesByTransactions(this.transactionsExpense)
                 }
             ]
         };
