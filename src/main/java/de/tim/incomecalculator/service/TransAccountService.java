@@ -73,12 +73,22 @@ public class TransAccountService {
     }
 
     /**
-     * Get all TransAccount by AccountCollection
+     * Get all TransAccounts by AccountCollection
      * @param id
      * @return the list of TransAccounts
      */
     public List<TransAccount> findByAccountCollection(Long id) {
         log.debug("Request to get TransAccounts of Account collection: {}", id);
         return transAccountRepository.findByAccountCollection_Id(id);
+    }
+
+    /**
+     * Get TransAccount by user id
+     * @param id
+     * @return the TransAccount
+     */
+    public TransAccount findByUserId(Long id) {
+        log.debug("Request to get TransAccount of User: {}", id);
+        return transAccountRepository.findByUser_Id(id);
     }
 }

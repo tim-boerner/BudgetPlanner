@@ -170,6 +170,20 @@ public class TransAccountResourceIntTest {
 
     @Test
     @Transactional
+    public void getTransAccountByUserId() throws Exception {
+        // Initialize the database
+        transAccountRepository.saveAndFlush(transAccount);
+
+        // Get the transAccount
+        restTransAccountMockMvc.perform(get("/api/trans-accounts/user/{id}", transAccount.getUser().getId()))
+                               .andExpect(status().isOk())
+                               .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                               .andExpect(jsonPath("$.id").value(transAccount.getId().intValue()))
+                               .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()));
+    }
+
+    @Test
+    @Transactional
     public void getNonExistingTransAccount() throws Exception {
         // Get the transAccount
         restTransAccountMockMvc.perform(get("/api/trans-accounts/{id}", Long.MAX_VALUE))
