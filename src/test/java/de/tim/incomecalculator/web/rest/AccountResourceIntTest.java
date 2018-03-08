@@ -8,6 +8,7 @@ import de.tim.incomecalculator.repository.AuthorityRepository;
 import de.tim.incomecalculator.repository.UserRepository;
 import de.tim.incomecalculator.security.AuthoritiesConstants;
 import de.tim.incomecalculator.service.MailService;
+import de.tim.incomecalculator.service.TransAccountService;
 import de.tim.incomecalculator.service.dto.UserDTO;
 import de.tim.incomecalculator.web.rest.errors.ExceptionTranslator;
 import de.tim.incomecalculator.web.rest.vm.KeyAndPasswordVM;
@@ -62,6 +63,9 @@ public class AccountResourceIntTest {
     private UserService userService;
 
     @Autowired
+    private TransAccountService transAccountService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -85,10 +89,10 @@ public class AccountResourceIntTest {
         MockitoAnnotations.initMocks(this);
         doNothing().when(mockMailService).sendActivationEmail(anyObject());
         AccountResource accountResource =
-            new AccountResource(userRepository, userService, mockMailService);
+            new AccountResource(userRepository, userService, mockMailService, transAccountService);
 
         AccountResource accountUserMockResource =
-            new AccountResource(userRepository, mockUserService, mockMailService);
+            new AccountResource(userRepository, mockUserService, mockMailService, transAccountService);
         this.restMvc = MockMvcBuilders.standaloneSetup(accountResource)
             .setMessageConverters(httpMessageConverters)
             .setControllerAdvice(exceptionTranslator)
