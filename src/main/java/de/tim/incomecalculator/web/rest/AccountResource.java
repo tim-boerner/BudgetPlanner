@@ -2,10 +2,12 @@ package de.tim.incomecalculator.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 
+import de.tim.incomecalculator.domain.TransAccount;
 import de.tim.incomecalculator.domain.User;
 import de.tim.incomecalculator.repository.UserRepository;
 import de.tim.incomecalculator.security.SecurityUtils;
 import de.tim.incomecalculator.service.MailService;
+import de.tim.incomecalculator.service.TransAccountService;
 import de.tim.incomecalculator.service.UserService;
 import de.tim.incomecalculator.service.dto.UserDTO;
 import de.tim.incomecalculator.web.rest.errors.*;
@@ -15,6 +17,7 @@ import de.tim.incomecalculator.web.rest.vm.ManagedUserVM;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,11 +40,15 @@ public class AccountResource {
 
     private final MailService mailService;
 
-    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService) {
+    @Autowired
+    private final TransAccountService transAccountService;
+
+    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService, TransAccountService transAccountService) {
 
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
+        this.transAccountService = transAccountService;
     }
 
     /**
@@ -66,7 +73,7 @@ public class AccountResource {
     }
 
     /**
-     * GET  /activate : activate the registered user.
+     * GET  /activate : activate the registered user and creates trans account.
      *
      * @param key the activation key
      * @throws RuntimeException 500 (Internal Server Error) if the user couldn't be activated
@@ -77,6 +84,11 @@ public class AccountResource {
         Optional<User> user = userService.activateRegistration(key);
         if (!user.isPresent()) {
             throw new InternalServerErrorException("No user was found for this reset key");
+        } else {
+            TransAccount transAccount = new TransAccount();
+            transAccount.setUser(user.get());
+            transAccount.setTitle(user.get().getFirstName() + "Account");
+            transAccountService.save(transAccount);
         }
     }
 

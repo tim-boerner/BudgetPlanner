@@ -15,4 +15,6 @@ import java.util.List;
 @Repository
 public interface TransAccountRepository extends JpaRepository<TransAccount, Long> {
     List<TransAccount> findByAccountCollection_Id(Long id);
+
+    TransAccount findByUser_Id(Long id);
 }

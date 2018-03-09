@@ -13,7 +13,7 @@ import { Account, LoginModalService, Principal } from '../shared';
 
 } )
 export class HomeComponent implements OnInit {
-    account: Account;
+    userAccount: Account;
     modalRef: NgbModalRef;
 
     constructor( private principal: Principal,
@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit {
 
     ngOnInit() {
         this.principal.identity().then( ( account ) => {
-            this.account = account;
+            this.userAccount = account;
         } );
         this.registerAuthenticationSuccess();
     }
@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
     registerAuthenticationSuccess() {
         this.eventManager.subscribe( 'authenticationSuccess', ( message ) => {
             this.principal.identity().then( ( account ) => {
-                this.account = account;
+                this.userAccount = account;
             } );
         } );
     }
@@ -42,5 +42,9 @@ export class HomeComponent implements OnInit {
 
     login() {
         this.modalRef = this.loginModalService.open();
+    }
+
+    getAccount(): Account {
+        return this.userAccount;
     }
 }

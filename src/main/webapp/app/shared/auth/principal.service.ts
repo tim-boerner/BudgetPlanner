@@ -88,6 +88,10 @@ export class Principal {
         return this.userIdentity !== undefined;
     }
 
+    getUserIdentity(): any {
+        return this.userIdentity;
+    }
+
     getAuthenticationState(): Observable<any> {
         return this.authenticationState.asObservable();
     }
