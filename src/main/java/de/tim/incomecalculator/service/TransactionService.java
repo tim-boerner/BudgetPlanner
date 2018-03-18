@@ -1,10 +1,13 @@
 package de.tim.incomecalculator.service;
 
+import de.tim.incomecalculator.domain.TransAccount;
 import de.tim.incomecalculator.domain.Transaction;
 import de.tim.incomecalculator.domain.enumeration.TransactionType;
 import de.tim.incomecalculator.repository.TransactionRepository;
+import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,10 +26,13 @@ public class TransactionService {
 
     private final Logger log = LoggerFactory.getLogger(TransactionService.class);
 
+    private final TransAccountService transAccountService;
+
     private final TransactionRepository transactionRepository;
 
-    public TransactionService(TransactionRepository transactionRepository) {
+    public TransactionService(TransactionRepository transactionRepository, TransAccountService transAccountService) {
         this.transactionRepository = transactionRepository;
+        this.transAccountService = transAccountService;
     }
 
     /**
@@ -198,6 +204,52 @@ public class TransactionService {
         for(Transaction transaction : transactions) {
             balance = balance + transaction.getValue();
         }
-        return balance;
+        return Math.round(balance * 100d)/100d;
+    }
+
+    public boolean generateTransactionsForAccount(Long transAccountId ,int year, int month){
+        TransAccount transAccount = transAccountService.findOne(transAccountId);
+
+
+        List<Transaction> yearlyTransactions = findByTransAccountAndType(transAccountId,TransactionType.YEARLY);
+        for (Transaction transaction : yearlyTransactions) {
+            Transaction generatedTransaction = new Transaction();
+            generatedTransaction.setType(TransactionType.ONCE);
+            generatedTransaction.setCategory(transaction.getCategory());
+            generatedTransaction.setDescription(transaction.getDescription());
+            generatedTransaction.setDate(LocalDate.of(year,month,1));
+            generatedTransaction.setValue(transaction.getValue()/12.0);
+            generatedTransaction.setTransAccount(transAccount);
+            save(generatedTransaction);
+        }
+
+
+        List<Transaction> monthlyTransactions = findByTransAccountAndType(transAccountId,TransactionType.MONTHLY);
+        for (Transaction transaction : monthlyTransactions) {
+            Transaction generatedTransaction = new Transaction();
+            generatedTransaction.setType(TransactionType.ONCE);
+            generatedTransaction.setCategory(transaction.getCategory());
+            generatedTransaction.setDescription(transaction.getDescription());
+            generatedTransaction.setDate(LocalDate.of(year,month,1));
+            generatedTransaction.setValue(transaction.getValue());
+            generatedTransaction.setTransAccount(transAccount);
+            save(generatedTransaction);
+        }
+
+        List<Transaction> dailyTransactions = findByTransAccountAndType(transAccountId,TransactionType.DAILY);
+
+        LocalDate date = LocalDate.of(year, month, 1);
+        for (Transaction transaction : dailyTransactions) {
+            Transaction generatedTransaction = new Transaction();
+            generatedTransaction.setType(TransactionType.ONCE);
+            generatedTransaction.setCategory(transaction.getCategory());
+            generatedTransaction.setDescription(transaction.getDescription());
+            generatedTransaction.setDate(date);
+            generatedTransaction.setValue(transaction.getValue()*date.lengthOfMonth());
+            generatedTransaction.setTransAccount(transAccount);
+            save(generatedTransaction);
+        }
+
+        return true;
     }
 }

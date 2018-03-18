@@ -390,4 +390,46 @@ public class TransactionResourceIntTest {
                                                     .andExpect(jsonPath("$.[*].type").value(hasItem(transaction2.getType().toString())))
                                                     .andReturn();
     }
+
+    @Test
+    @Transactional
+    public void getYearlyTransactionsByTransAccount() throws Exception {
+        // Initialize the database
+        TransAccount transAccount = TransAccountResourceIntTest.createEntity(em);
+        transAccount = transAccountService.save(transAccount);
+
+        Transaction transaction1 = createEntity(em);
+        transaction1.setTransAccount(transAccount);
+        transaction1.setType(TransactionType.YEARLY);
+        transaction1 = transactionService.save(transaction1);
+
+        Transaction transaction2 = createEntity(em);
+        transaction2.setTransAccount(transAccount);
+        transaction2.setType(TransactionType.ONCE);
+        transaction2 = transactionService.save(transaction2);
+
+        Transaction transaction3 = createEntity(em);
+        transaction3.setTransAccount(transAccount);
+        transaction3.setType(TransactionType.YEARLY);
+        transaction3 = transactionService.save(transaction3);
+
+        // Get all the transactionList
+        MvcResult mvcResult = restTransactionMockMvc.perform(get("/api/transactions/account/{id}/yearly", transAccount
+            .getId(), transaction.getDate().getYear(), transaction.getDate().getMonthValue()))
+                                                    .andExpect(status().isOk())
+                                                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                                                    .andExpect(jsonPath("$.[*].id").value(hasItem(transaction1.getId()
+                                                                                                              .intValue())))
+                                                    .andExpect(jsonPath("$.[*].value").value(hasItem(DEFAULT_VALUE.doubleValue())))
+                                                    .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+                                                    .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
+                                                    .andExpect(jsonPath("$.[*].type").value(hasItem(transaction1.getType().toString())))
+                                                    .andExpect(jsonPath("$.[*].id").value(hasItem(transaction3.getId()
+                                                                                                              .intValue())))
+                                                    .andExpect(jsonPath("$.[*].value").value(hasItem(DEFAULT_VALUE.doubleValue())))
+                                                    .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+                                                    .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
+                                                    .andExpect(jsonPath("$.[*].type").value(hasItem(transaction3.getType().toString())))
+                                                    .andReturn();
+    }
 }

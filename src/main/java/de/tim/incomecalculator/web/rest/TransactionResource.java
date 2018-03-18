@@ -153,12 +153,22 @@ public class TransactionResource {
     @GetMapping("/transactions/account/{id}/{year}/{month}")
     @Timed
     public ResponseEntity<List<Transaction>> getTransactionsByTransAccount(@PathVariable Long id,@PathVariable int year,@PathVariable int month) {
-        log.debug("REST request to get a page of Transactions by TransAccount: {} of year {} and month {}", id, year, month);
+        log.debug("REST request to get all Transactions by TransAccount: {} of year {} and month {}", id, year, month);
         List<Transaction> transactions = transactionService.findByTransAccountAndYearAndMonthAndType(id, year, month, TransactionType.ONCE);
         return new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
-
-
-
+    /**
+     * GET  /transactions/account/:id/yearly : get all yearly transactions by transAccount.
+     *
+     * @param id of the transAccount
+     * @return the ResponseEntity with status 200 (OK) and the list of transactions in body
+     */
+    @GetMapping("/transactions/account/{id}/yearly")
+    @Timed
+    public ResponseEntity<List<Transaction>> getYearlyTransactionsByTransAccount(@PathVariable Long id) {
+        log.debug("REST request to get a list of yearly transactions by TransAccount: {}", id);
+        List<Transaction> transactions = transactionService.findByTransAccountAndType(id, TransactionType.YEARLY);
+        return new ResponseEntity<>(transactions, HttpStatus.OK);
+    }
 }

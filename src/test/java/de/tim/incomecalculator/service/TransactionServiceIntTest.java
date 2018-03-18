@@ -254,6 +254,37 @@ public class TransactionServiceIntTest {
 
         double balance = transactionService.getBalanceOfYearAndMonthByTransAccount(transAccount.getId(),2016,5);
         assertThat(balance).isEqualTo(10.0);
+    }
 
+    @Test
+    public void testGenerateTransactions() {
+        User user = UserServiceIntTest.generateUser();
+        userRepository.saveAndFlush(user);
+
+        TransAccount transAccount = new TransAccount();
+        transAccount.setUser(user);
+        transAccountService.save(transAccount);
+
+        Transaction transaction = generateTransactionByTransAccountAndTypeAndLocalDate(transAccount,TransactionType.ONCE,LocalDate.of(2016,5,10));
+        transactionService.save(transaction);
+        transaction = generateTransactionByTransAccountAndTypeAndLocalDate(transAccount,TransactionType.MONTHLY,LocalDate.of(2016,5,10));
+        transactionService.save(transaction);
+        transaction = generateTransactionByTransAccountAndTypeAndLocalDate(transAccount,TransactionType.ONCE,LocalDate.of(2016,5,5));
+        transactionService.save(transaction);
+        transaction = generateTransactionByTransAccountAndTypeAndLocalDate(transAccount,TransactionType.YEARLY,LocalDate.of(2016,5,28));
+        transaction.setValue(500.0);
+        transactionService.save(transaction);
+        transaction = generateTransactionByTransAccountAndTypeAndLocalDate(transAccount,TransactionType.ONCE,LocalDate.of(2016,12,10));
+        transactionService.save(transaction);
+        transaction = generateTransactionByTransAccountAndTypeAndLocalDate(transAccount,TransactionType.ONCE,LocalDate.of(2017,5,10));
+        transactionService.save(transaction);
+        transaction = generateTransactionByTransAccountAndTypeAndLocalDate(transAccount,TransactionType.MONTHLY,LocalDate.of(2015,1,1));
+        transaction.setValue(30.0);
+        transactionService.save(transaction);
+
+        boolean result = transactionService.generateTransactionsForAccount(transAccount.getId(),2017,9);
+        double balance = transactionService.getBalanceOfYearAndMonthByTransAccount(transAccount.getId(),2017,9);
+
+        assertThat(balance).isEqualTo(76.67);
     }
 }

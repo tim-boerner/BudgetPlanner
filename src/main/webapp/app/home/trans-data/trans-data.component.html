@@ -1,4 +1,27 @@
 <div class="container">
+
+
+    <div class="row justify-content-md">
+        <div class="col-md-auto">
+            <button class="btn btn-primary" (click)="decreaseDateByMonth()">
+                <span class="fa fa-angle-left "></span>
+            </button>
+        </div>
+        <div class="col-md-auto">
+            <h3>
+                <span jhiTranslate="month.{{month[date.getMonth()]}}">
+                    month
+                </span>
+                {{date.getFullYear()}}
+            </h3>
+        </div>
+        <div class="col-md-auto">
+            <button class="btn btn-primary" (click)="increaseDateByMonth()">
+                <span class="fa fa-angle-right "></span>
+            </button>
+        </div>
+    </div>
+
     <div class="row justify-content-md">
         <div class="col-md-auto">
             <div class="card text-center balance-card">

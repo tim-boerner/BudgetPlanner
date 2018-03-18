@@ -7,6 +7,7 @@ import { Principal } from '../../shared/auth/principal.service';
 import { Account } from '../../shared';
 import { TransAccountService } from '../../entities/trans-account/trans-account.service';
 import { TransAccount } from '../../entities/trans-account/trans-account.model';
+import { FormsModule } from '@angular/forms';
 
 @Component( {
     selector: 'jhi-trans-data',
@@ -27,6 +28,8 @@ export class TransDataComponent implements OnInit {
     dataExpense: any;
     categoryLabels: string[];
     color: string;
+    date: Date;
+    month: string[];
 
     constructor( private transactionService: TransactionService,
                  private transAccountService: TransAccountService,
@@ -37,7 +40,32 @@ export class TransDataComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.date = new Date();
         this.loadData();
+
+        this.month = new Array();
+        this.month[0] = 'january';
+        this.month[1] = 'february';
+        this.month[2] = 'march';
+        this.month[3] = 'april';
+        this.month[4] = 'may';
+        this.month[5] = 'june';
+        this.month[6] = 'july';
+        this.month[7] = 'august';
+        this.month[8] = 'september';
+        this.month[9] = 'october';
+        this.month[10] = 'november';
+        this.month[11] = 'december';
+    }
+
+    decreaseDateByMonth() {
+        this.date.setMonth( this.date.getMonth() - 1 );
+        this.loadTransactionsByTransAccountId( this.transAccount.id, this.date.getFullYear(), this.date.getMonth() + 1 );
+    }
+
+    increaseDateByMonth() {
+        this.date.setMonth( this.date.getMonth() + 1 );
+        this.loadTransactionsByTransAccountId( this.transAccount.id, this.date.getFullYear(), this.date.getMonth() + 1 );
     }
 
     loadData() {
@@ -50,13 +78,10 @@ export class TransDataComponent implements OnInit {
 
     onLoadTransAccountSuccess( data ) {
         this.transAccount = data;
-        this.loadTransactionsByTransAccountId( this.transAccount.id );
+        this.loadTransactionsByTransAccountId( this.transAccount.id, this.date.getFullYear(), this.date.getMonth() + 1 );
     }
 
-    loadTransactionsByTransAccountId( id: number ) {
-        const d = new Date();
-        const month = d.getMonth() + 1;
-        const year = d.getFullYear();
+    loadTransactionsByTransAccountId( id: number, year: number, month: number ) {
         this.transactionService.queryByAccountAndDate( id, year, month ).subscribe(
             ( res: HttpResponse<Transaction[]> ) => this.onLoadTransactionsSuccess( res.body ),
             ( res: HttpErrorResponse ) => this.onError( res.message )
